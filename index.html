@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>寶可夢三語詞彙 | Pokémon Trilingual Vocab</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔴</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&family=Noto+Sans+TC:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ═══ RESET & VARS ═══ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f1923;
+  --bg2: #162230;
+  --bg3: #1c2e42;
+  --surface: #1e3347;
+  --surface-hover: #254059;
+  --border: #2a4a66;
+  --text: #e8edf2;
+  --text2: #8fa4b8;
+  --text3: #5a7a94;
+  --accent: #ff4757;
+  --accent2: #ffa502;
+  --pokemon: #ee1515;
+  --move: #3498db;
+  --item: #f4d03f;
+  --ability: #2ecc71;
+  --nature: #e8a0bf;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --font-jp: 'M PLUS Rounded 1c', sans-serif;
+  --font-zh: 'Noto Sans TC', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-zh);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ═══ BACKGROUND ═══ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(238,21,21,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(52,152,219,0.06) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══ HEADER ═══ */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15,25,35,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.8rem 1.5rem;
+}
+
+.header-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 900;
+  font-size: 1.15rem;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+}
+
+.logo-ball {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--accent) 48%, #fff 48%, #fff 52%, #ddd 52%);
+  border: 2px solid #444;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.logo-ball::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #555;
+}
+
+.nav-links {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.nav-btn {
+  background: none;
+  border: 2px solid transparent;
+  color: var(--text2);
+  padding: 0.4rem 0.9rem;
+  border-radius: 99px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.nav-btn:hover { color: var(--text); background: var(--bg3); }
+.nav-btn.active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(255,71,87,0.08);
+}
+
+/* ═══ MAIN ═══ */
+.main {
+  position: relative;
+  z-index: 1;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* ═══ SEARCH ═══ */
+.search-section { margin-bottom: 1.5rem; }
+
+.search-box {
+  position: relative;
+  margin-bottom: 0.8rem;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0.85rem 1.2rem 0.85rem 3rem;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-box input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255,71,87,0.15);
+}
+
+.search-box input::placeholder { color: var(--text3); }
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text3);
+  font-size: 1.1rem;
+  pointer-events: none;
+}
+
+.search-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text3);
+  padding: 0 0.2rem;
+}
+
+/* ═══ CATEGORY PILLS ═══ */
+.cat-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.2rem;
+}
+
+.cat-pill {
+  border: none;
+  padding: 0.35rem 0.8rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  background: var(--bg3);
+  color: var(--text2);
+}
+
+.cat-pill:hover { filter: brightness(1.2); }
+
+.cat-pill.active { color: #fff; }
+.cat-pill[data-cat="all"].active { background: var(--accent); }
+.cat-pill[data-cat="pokemon"].active { background: var(--pokemon); }
+.cat-pill[data-cat="move"].active { background: var(--move); }
+.cat-pill[data-cat="item"].active { background: var(--item); color: #222; }
+.cat-pill[data-cat="ability"].active { background: var(--ability); }
+.cat-pill[data-cat="nature"].active { background: var(--nature); color: #222; }
+
+/* ═══ RESULTS LIST ═══ */
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.result-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.7rem 1rem;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+}
+
+.result-row:hover {
+  background: var(--surface-hover);
+  border-color: var(--border);
+  transform: translateX(3px);
+}
+
+.result-emoji { font-size: 1.1rem; }
+
+.result-names {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.6rem;
+  min-width: 0;
+}
+
+.result-zh {
+  font-weight: 700;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.result-en {
+  color: var(--text2);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.result-ja {
+  color: var(--text3);
+  font-size: 0.82rem;
+  font-family: var(--font-jp);
+  white-space: nowrap;
+}
+
+.result-id {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text3);
+  background: var(--bg2);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+}
+
+.result-cat-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.result-cat-tag[data-cat="pokemon"] { background: rgba(238,21,21,0.2); color: #ff6b6b; }
+.result-cat-tag[data-cat="move"]    { background: rgba(52,152,219,0.2); color: #5dade2; }
+.result-cat-tag[data-cat="item"]    { background: rgba(244,208,63,0.2); color: #f4d03f; }
+.result-cat-tag[data-cat="ability"] { background: rgba(46,204,113,0.2); color: #58d68d; }
+.result-cat-tag[data-cat="nature"]  { background: rgba(232,160,191,0.2); color: #e8a0bf; }
+
+/* ═══ DETAIL MODAL ═══ */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  z-index: 200;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 3rem 1rem;
+  overflow-y: auto;
+}
+
+.modal-backdrop.open { display: flex; }
+
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 16px 64px rgba(0,0,0,0.5);
+  animation: modalIn 0.25s ease-out;
+  overflow: hidden;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+.modal-header {
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-header h2 {
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text3);
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 0.3rem;
+  border-radius: 6px;
+  transition: all 0.15s;
+  line-height: 1;
+}
+
+.modal-close:hover { background: var(--bg3); color: var(--text); }
+
+.modal-body { padding: 1.5rem; }
+
+.detail-names {
+  text-align: center;
+  margin-bottom: 1.2rem;
+}
+
+.detail-ja {
+  font-family: var(--font-jp);
+  font-size: 1.8rem;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+.detail-ja-reading {
+  font-family: var(--font-jp);
+  font-size: 0.95rem;
+  color: var(--text2);
+  margin-top: 0.1rem;
+}
+
+.detail-en {
+  font-size: 1.2rem;
+  color: var(--text2);
+  margin-top: 0.5rem;
+}
+
+.detail-zh {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-top: 0.3rem;
+}
+
+.detail-sprite {
+  display: block;
+  margin: 0.8rem auto;
+  width: 120px;
+  height: 120px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+}
+
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+  margin: 0.8rem 0;
+}
+
+.detail-tag {
+  padding: 0.3rem 0.7rem;
+  border-radius: 99px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: var(--bg3);
+  color: var(--text2);
+}
+
+.detail-stats {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.detail-stat-row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.82rem;
+}
+
+.detail-stat-label {
+  color: var(--text2);
+  font-weight: 600;
+  text-align: right;
+}
+
+.detail-stat-val {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.detail-loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text3);
+}
+
+.detail-loading .spinner {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══ LEARN MODE ═══ */
+.learn-section { display: none; }
+.learn-section.active { display: block; }
+.search-page { display: block; }
+.search-page.hidden { display: none; }
+
+.learn-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
+}
+
+.learn-btn {
+  padding: 0.55rem 1.2rem;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.learn-btn:hover { border-color: var(--accent); background: var(--surface-hover); }
+.learn-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.learn-btn.primary:hover { filter: brightness(1.15); }
+
+.card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  max-width: 480px;
+  margin: 0 auto;
+  box-shadow: var(--shadow);
+}
+
+.card-cat-bar {
+  height: 4px;
+  background: var(--accent);
+}
+
+.card-cat-bar[data-cat="pokemon"] { background: var(--pokemon); }
+.card-cat-bar[data-cat="move"]    { background: var(--move); }
+.card-cat-bar[data-cat="item"]    { background: var(--item); }
+.card-cat-bar[data-cat="ability"] { background: var(--ability); }
+.card-cat-bar[data-cat="nature"]  { background: var(--nature); }
+
+.card-inner { padding: 2rem 1.5rem; text-align: center; }
+
+.card-cat-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text3);
+  margin-bottom: 1rem;
+}
+
+.card-ja {
+  font-family: var(--font-jp);
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+.card-reading {
+  font-family: var(--font-jp);
+  font-size: 1rem;
+  color: var(--text2);
+  margin-top: 0.2rem;
+}
+
+.card-en {
+  font-size: 1.3rem;
+  color: var(--text2);
+  margin-top: 0.8rem;
+}
+
+.card-zh {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-top: 0.4rem;
+}
+
+.card-id {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text3);
+  margin-top: 1rem;
+}
+
+.card-sprite {
+  display: block;
+  margin: 0.6rem auto;
+  width: 128px;
+  height: 128px;
+  image-rendering: auto;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.3));
+}
+
+.card-extra {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+.card-reveal {
+  display: none;
+  animation: fadeUp 0.3s ease-out;
+}
+
+.card-reveal.show { display: block; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.card-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ═══ FOOTER ═══ */
+.footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text3);
+  font-size: 0.75rem;
+  border-top: 1px solid var(--border);
+  margin-top: 3rem;
+}
+
+.footer a { color: var(--text2); text-decoration: none; }
+.footer a:hover { color: var(--accent); }
+
+/* ═══ EMPTY / LOADING ═══ */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text3);
+}
+
+.empty-state .emoji { font-size: 2.5rem; margin-bottom: 0.8rem; }
+.empty-state p { font-size: 0.9rem; line-height: 1.6; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 600px) {
+  .header-inner { flex-wrap: wrap; justify-content: center; }
+  .result-row { grid-template-columns: auto 1fr auto; gap: 0.5rem; padding: 0.6rem 0.7rem; }
+  .result-cat-tag { display: none; }
+  .result-id { font-size: 0.65rem; }
+  .card-ja { font-size: 1.8rem; }
+  .card-zh { font-size: 1.3rem; }
+  .modal { margin: 1rem; }
+  .modal-backdrop { padding: 1.5rem 0.5rem; }
+}
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-ball"></div>
+      <span>寶可夢三語詞彙</span>
+    </div>
+    <nav class="nav-links">
+      <button class="nav-btn active" data-page="search" onclick="switchPage('search')">🔍 搜尋</button>
+      <button class="nav-btn" data-page="learn" onclick="switchPage('learn')">📚 學習</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main">
+
+  <!-- SEARCH PAGE -->
+  <div class="search-page" id="searchPage">
+    <section class="search-section">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="搜尋中文、英文、日文名稱…" autocomplete="off">
+      </div>
+      <div class="cat-pills" id="catPills">
+        <button class="cat-pill active" data-cat="all" onclick="setCat('all')">全部</button>
+        <button class="cat-pill" data-cat="pokemon" onclick="setCat('pokemon')">🔴 寶可夢</button>
+        <button class="cat-pill" data-cat="move" onclick="setCat('move')">⚔️ 招式</button>
+        <button class="cat-pill" data-cat="item" onclick="setCat('item')">🎒 道具</button>
+        <button class="cat-pill" data-cat="ability" onclick="setCat('ability')">✨ 特性</button>
+        <button class="cat-pill" data-cat="nature" onclick="setCat('nature')">🌸 性格</button>
+      </div>
+      <div class="search-meta">
+        <span id="resultCount"></span>
+        <span id="dataStatus">載入中…</span>
+      </div>
+    </section>
+    <div class="results" id="results"></div>
+  </div>
+
+  <!-- LEARN PAGE -->
+  <div class="learn-section" id="learnPage">
+    <div class="learn-controls">
+      <button class="learn-btn primary" onclick="newCard()">🔄 隨機一個</button>
+      <button class="learn-btn" onclick="newCard('pokemon')">🔴 寶可夢</button>
+      <button class="learn-btn" onclick="newCard('move')">⚔️ 招式</button>
+      <button class="learn-btn" onclick="newCard('item')">🎒 道具</button>
+      <button class="learn-btn" onclick="newCard('ability')">✨ 特性</button>
+      <button class="learn-btn" onclick="newCard('nature')">🌸 性格</button>
+    </div>
+    <div id="cardArea">
+      <div class="empty-state">
+        <div class="emoji">📚</div>
+        <p>點擊上方按鈕開始學習！<br>Click a button above to start learning!</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══ DETAIL MODAL ═══ -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">詳細資料</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <div class="detail-loading"><div class="spinner"></div><p style="margin-top:0.8rem">從 PokeAPI 取得資料中…</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <p>資料來源：<a href="https://pokeapi.co" target="_blank">PokeAPI</a> ｜ 繁中翻譯：zh-Hant.json ｜ 
+    <a href="https://github.com" target="_blank">GitHub</a></p>
+  <p style="margin-top:0.3rem">寶可夢三語詞彙 Pokémon Trilingual Vocab</p>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   DATA & STATE
+   ═══════════════════════════════════════════════════════════ */
+
+let INDEX = {};
+let currentCat = 'all';
+let currentQuery = '';
+const POKEAPI = 'https://pokeapi.co/api/v2';
+const MAX_RESULTS = 50;
+
+const CAT_EMOJI = {
+  pokemon: '🔴', move: '⚔️', item: '🎒', ability: '✨', nature: '🌸'
+};
+const CAT_LABEL = {
+  pokemon: '寶可夢', move: '招式', item: '道具', ability: '特性', nature: '性格'
+};
+const CAT_COLORS = {
+  pokemon: '#ee1515', move: '#3498db', item: '#f4d03f', ability: '#2ecc71', nature: '#e8a0bf'
+};
+
+const TYPE_INFO = {
+  normal:{emoji:'⚪',zh:'一般',ja:'ノーマル'},fire:{emoji:'🔥',zh:'火',ja:'ほのお'},
+  water:{emoji:'💧',zh:'水',ja:'みず'},electric:{emoji:'⚡',zh:'電',ja:'でんき'},
+  grass:{emoji:'🌿',zh:'草',ja:'くさ'},ice:{emoji:'❄️',zh:'冰',ja:'こおり'},
+  fighting:{emoji:'🥊',zh:'格鬥',ja:'かくとう'},poison:{emoji:'☠️',zh:'毒',ja:'どく'},
+  ground:{emoji:'⛰️',zh:'地面',ja:'じめん'},flying:{emoji:'🕊️',zh:'飛行',ja:'ひこう'},
+  psychic:{emoji:'🔮',zh:'超能力',ja:'エスパー'},bug:{emoji:'🐛',zh:'蟲',ja:'むし'},
+  rock:{emoji:'🪨',zh:'岩石',ja:'いわ'},ghost:{emoji:'👻',zh:'幽靈',ja:'ゴースト'},
+  dragon:{emoji:'🐉',zh:'龍',ja:'ドラゴン'},dark:{emoji:'🌙',zh:'惡',ja:'あく'},
+  steel:{emoji:'⚙️',zh:'鋼',ja:'はがね'},fairy:{emoji:'🧚',zh:'妖精',ja:'フェアリー'},
+};
+
+const STAT_INFO = {
+  hp:{emoji:'❤️',zh:'HP',ja:'HP'},attack:{emoji:'⚔️',zh:'攻擊',ja:'こうげき'},
+  defense:{emoji:'🛡️',zh:'防禦',ja:'ぼうぎょ'},'special-attack':{emoji:'🔮',zh:'特攻',ja:'とくこう'},
+  'special-defense':{emoji:'🧿',zh:'特防',ja:'とくぼう'},speed:{emoji:'💨',zh:'速度',ja:'すばやさ'},
+};
+
+const DAMAGE_CLASS = {
+  physical:{emoji:'💥',zh:'物理'},special:{emoji:'🌀',zh:'特殊'},status:{emoji:'📊',zh:'變化'},
+};
+
+/* ═══════════════════════════════════════════════════════════
+   LOAD DATA
+   ═══════════════════════════════════════════════════════════ */
+
+async function loadData() {
+  const statusEl = document.getElementById('dataStatus');
+  try {
+    const resp = await fetch('trilingual.json');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    INDEX = await resp.json();
+    const total = Object.values(INDEX).reduce((s, c) => s + Object.keys(c).length, 0);
+    statusEl.textContent = `已載入 ${total.toLocaleString()} 筆`;
+    doSearch();
+  } catch (e) {
+    statusEl.textContent = '⚠️ 無法載入 trilingual.json';
+    console.error('Failed to load data:', e);
+    document.getElementById('results').innerHTML =
+      '<div class="empty-state"><div class="emoji">⚠️</div>' +
+      '<p>找不到 <code>trilingual.json</code><br>' +
+      '請先執行 <code>python3 build_index.py</code> 建構資料索引，<br>' +
+      '然後將 trilingual.json 放在與 index.html 同一個資料夾。</p></div>';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SEARCH
+   ═══════════════════════════════════════════════════════════ */
+
+function doSearch() {
+  const query = document.getElementById('searchInput').value.trim().toLowerCase();
+  currentQuery = query;
+  const cats = currentCat === 'all' ? Object.keys(INDEX) : [currentCat];
+  const results = [];
+
+  for (const cat of cats) {
+    const entries = INDEX[cat] || {};
+    for (const [id, entry] of Object.entries(entries)) {
+      if (results.length >= MAX_RESULTS) break;
+      if (!query) {
+        // show nothing if no query (too many results)
+        continue;
+      }
+      const fields = [entry.en || '', entry.ja || '', entry.ja_hrkt || '', entry.zh || ''];
+      if (fields.some(f => f.toLowerCase().includes(query))) {
+        results.push({ cat, id: parseInt(id), ...entry });
+      }
+    }
+    if (results.length >= MAX_RESULTS) break;
+  }
+
+  renderResults(results, query);
+}
+
+function renderResults(results, query) {
+  const container = document.getElementById('results');
+  const countEl = document.getElementById('resultCount');
+
+  if (!query) {
+    container.innerHTML = '<div class="empty-state"><div class="emoji">🔍</div>' +
+      '<p>輸入關鍵字開始搜尋<br>Search in Chinese, English, or Japanese</p></div>';
+    countEl.textContent = '';
+    return;
+  }
+
+  if (results.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="emoji">😢</div>' +
+      '<p>找不到「' + escHtml(query) + '」<br>Try a different keyword</p></div>';
+    countEl.textContent = '0 筆結果';
+    return;
+  }
+
+  countEl.textContent = results.length >= MAX_RESULTS
+    ? `顯示前 ${MAX_RESULTS} 筆`
+    : `${results.length} 筆結果`;
+
+  container.innerHTML = results.map(r => {
+    const emoji = CAT_EMOJI[r.cat] || '❓';
+    const catLabel = CAT_LABEL[r.cat] || r.cat;
+    const zh = r.zh || '—';
+    const en = r.en || '—';
+    const ja = r.ja || r.ja_hrkt || '—';
+    return `<div class="result-row" onclick="openDetail('${r.cat}',${r.id})">
+      <span class="result-emoji">${emoji}</span>
+      <div class="result-names">
+        <span class="result-zh">${escHtml(zh)}</span>
+        <span class="result-en">${escHtml(en)}</span>
+        <span class="result-ja">${escHtml(ja)}</span>
+      </div>
+      <span class="result-id">#${String(r.id).padStart(4,'0')}</span>
+      <span class="result-cat-tag" data-cat="${r.cat}">${catLabel}</span>
+    </div>`;
+  }).join('');
+}
+
+function setCat(cat) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-pill').forEach(el => {
+    el.classList.toggle('active', el.dataset.cat === cat);
+  });
+  doSearch();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DETAIL MODAL — fetch from PokeAPI
+   ═══════════════════════════════════════════════════════════ */
+
+const ENDPOINT_MAP = {
+  pokemon: 'pokemon-species', move: 'move', item: 'item', ability: 'ability', nature: 'nature'
+};
+
+async function openDetail(cat, id) {
+  const modal = document.getElementById('modalBackdrop');
+  const body = document.getElementById('modalBody');
+  const title = document.getElementById('modalTitle');
+
+  title.innerHTML = `${CAT_EMOJI[cat] || ''} ${CAT_LABEL[cat] || cat}`;
+  body.innerHTML = '<div class="detail-loading"><div class="spinner"></div><p style="margin-top:0.8rem">從 PokeAPI 取得資料中…</p></div>';
+  modal.classList.add('open');
+
+  // Get local data first
+  const local = (INDEX[cat] || {})[String(id)] || {};
+
+  try {
+    const endpoint = ENDPOINT_MAP[cat];
+    const resp = await fetch(`${POKEAPI}/${endpoint}/${id}`);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+
+    if (cat === 'pokemon') {
+      await renderPokemonDetail(data, local, id);
+    } else if (cat === 'move') {
+      renderMoveDetail(data, local);
+    } else if (cat === 'nature') {
+      renderNatureDetail(data, local);
+    } else {
+      renderGenericDetail(data, local, cat);
+    }
+  } catch (e) {
+    // Fallback to local data
+    body.innerHTML = renderLocalDetail(local, cat, id);
+  }
+}
+
+function getName(names, lang) {
+  const entry = (names || []).find(n => n.language?.name === lang);
+  return entry ? entry.name : '';
+}
+
+function formatJp(names) {
+  const ja = getName(names, 'ja');
+  const hrkt = getName(names, 'ja-Hrkt');
+  return { ja: ja || hrkt || '—', reading: (ja && hrkt && ja !== hrkt) ? hrkt : '' };
+}
+
+function getZh(names, local) {
+  return getName(names, 'zh-Hant') || getName(names, 'zh-Hans') || local.zh || '—';
+}
+
+async function renderPokemonDetail(species, local, id) {
+  const body = document.getElementById('modalBody');
+  const jp = formatJp(species.names);
+  const en = getName(species.names, 'en') || local.en || '—';
+  const zh = getZh(species.names, local);
+
+  // Fetch pokemon data for sprite & types
+  let sprite = '', types = [];
+  try {
+    const pResp = await fetch(`${POKEAPI}/pokemon/${id}`);
+    if (pResp.ok) {
+      const pData = await pResp.json();
+      sprite = pData.sprites?.other?.['official-artwork']?.front_default || pData.sprites?.front_default || '';
+      types = (pData.types || []).map(t => t.type.name);
+    }
+  } catch(e) {}
+
+  const typeHtml = types.map(t => {
+    const info = TYPE_INFO[t] || {};
+    return `<span class="detail-tag">${info.emoji || ''} ${info.zh || t} / ${t} / ${info.ja || ''}</span>`;
+  }).join('');
+
+  body.innerHTML = `
+    <div class="detail-names">
+      ${sprite ? `<img class="detail-sprite" src="${sprite}" alt="${en}">` : ''}
+      <div class="detail-ja">${escHtml(jp.ja)}</div>
+      ${jp.reading ? `<div class="detail-ja-reading">${escHtml(jp.reading)}</div>` : ''}
+      <div class="detail-en">${escHtml(en)}</div>
+      <div class="detail-zh">${escHtml(zh)}</div>
+    </div>
+    <div style="text-align:center;font-family:var(--font-mono);color:var(--text3);font-size:0.8rem;margin-bottom:0.6rem">
+      #${String(id).padStart(4,'0')}
+    </div>
+    ${typeHtml ? `<div class="detail-tags">${typeHtml}</div>` : ''}
+  `;
+}
+
+function renderMoveDetail(data, local) {
+  const body = document.getElementById('modalBody');
+  const jp = formatJp(data.names);
+  const en = getName(data.names, 'en') || local.en || '—';
+  const zh = getZh(data.names, local);
+  const type = data.type?.name;
+  const dc = data.damage_class?.name;
+  const tInfo = TYPE_INFO[type] || {};
+  const dcInfo = DAMAGE_CLASS[dc] || {};
+
+  const stats = [];
+  if (data.power) stats.push(`威力 <strong>${data.power}</strong>`);
+  if (data.accuracy) stats.push(`命中 <strong>${data.accuracy}</strong>`);
+  if (data.pp) stats.push(`PP <strong>${data.pp}</strong>`);
+
+  body.innerHTML = `
+    <div class="detail-names">
+      <div class="detail-ja">${escHtml(jp.ja)}</div>
+      ${jp.reading ? `<div class="detail-ja-reading">${escHtml(jp.reading)}</div>` : ''}
+      <div class="detail-en">${escHtml(en)}</div>
+      <div class="detail-zh">${escHtml(zh)}</div>
+    </div>
+    <div class="detail-tags">
+      ${type ? `<span class="detail-tag">${tInfo.emoji || ''} ${tInfo.zh || type}</span>` : ''}
+      ${dc ? `<span class="detail-tag">${dcInfo.emoji || ''} ${dcInfo.zh || dc}</span>` : ''}
+    </div>
+    ${stats.length ? `<div style="text-align:center;margin-top:0.8rem;color:var(--text2);font-size:0.9rem">${stats.join(' ｜ ')}</div>` : ''}
+  `;
+}
+
+function renderNatureDetail(data, local) {
+  const body = document.getElementById('modalBody');
+  const jp = formatJp(data.names);
+  const en = getName(data.names, 'en') || local.en || '—';
+  const zh = getZh(data.names, local);
+  const inc = data.increased_stat?.name;
+  const dec = data.decreased_stat?.name;
+
+  let effectHtml = '';
+  if (inc && dec) {
+    const incI = STAT_INFO[inc] || {};
+    const decI = STAT_INFO[dec] || {};
+    effectHtml = `
+      <div class="detail-stats">
+        <div class="detail-stat-row">
+          <span class="detail-stat-label">⬆️ ${incI.zh || inc}</span>
+          <span class="detail-stat-val" style="color:#2ecc71">× 1.1</span>
+        </div>
+        <div class="detail-stat-row">
+          <span class="detail-stat-label">⬇️ ${decI.zh || dec}</span>
+          <span class="detail-stat-val" style="color:#e74c3c">× 0.9</span>
+        </div>
+      </div>`;
+  } else {
+    effectHtml = '<div style="text-align:center;color:var(--text2);margin-top:0.8rem">➖ 均衡（無能力值修正）</div>';
+  }
+
+  body.innerHTML = `
+    <div class="detail-names">
+      <div class="detail-ja">${escHtml(jp.ja)}</div>
+      ${jp.reading ? `<div class="detail-ja-reading">${escHtml(jp.reading)}</div>` : ''}
+      <div class="detail-en">${escHtml(en)}</div>
+      <div class="detail-zh">${escHtml(zh)}</div>
+    </div>
+    ${effectHtml}
+  `;
+}
+
+function renderGenericDetail(data, local, cat) {
+  const body = document.getElementById('modalBody');
+  const jp = formatJp(data.names);
+  const en = getName(data.names, 'en') || local.en || '—';
+  const zh = getZh(data.names, local);
+
+  body.innerHTML = `
+    <div class="detail-names">
+      <div class="detail-ja">${escHtml(jp.ja)}</div>
+      ${jp.reading ? `<div class="detail-ja-reading">${escHtml(jp.reading)}</div>` : ''}
+      <div class="detail-en">${escHtml(en)}</div>
+      <div class="detail-zh">${escHtml(zh)}</div>
+    </div>
+  `;
+}
+
+function renderLocalDetail(local, cat, id) {
+  return `
+    <div class="detail-names">
+      <div class="detail-ja">${escHtml(local.ja || local.ja_hrkt || '—')}</div>
+      ${(local.ja_hrkt && local.ja && local.ja !== local.ja_hrkt) ? `<div class="detail-ja-reading">${escHtml(local.ja_hrkt)}</div>` : ''}
+      <div class="detail-en">${escHtml(local.en || '—')}</div>
+      <div class="detail-zh">${escHtml(local.zh || '—')}</div>
+    </div>
+    <div style="text-align:center;margin-top:1rem;color:var(--text3);font-size:0.8rem">
+      ⚠️ 無法連線 PokeAPI，僅顯示本地資料
+    </div>
+  `;
+}
+
+function closeModal() {
+  document.getElementById('modalBackdrop').classList.remove('open');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LEARN MODE
+   ═══════════════════════════════════════════════════════════ */
+
+let currentCard = null;
+
+function newCard(cat) {
+  const cats = cat ? [cat] : Object.keys(INDEX);
+  const validCats = cats.filter(c => INDEX[c] && Object.keys(INDEX[c]).length > 0);
+  if (validCats.length === 0) return;
+
+  const chosenCat = validCats[Math.floor(Math.random() * validCats.length)];
+  const entries = INDEX[chosenCat];
+  const ids = Object.keys(entries);
+  const randId = ids[Math.floor(Math.random() * ids.length)];
+  const entry = entries[randId];
+
+  currentCard = { cat: chosenCat, id: parseInt(randId), ...entry };
+  renderCard(currentCard);
+}
+
+function renderCard(c) {
+  const area = document.getElementById('cardArea');
+  const ja = c.ja || c.ja_hrkt || '—';
+  const reading = (c.ja && c.ja_hrkt && c.ja !== c.ja_hrkt) ? c.ja_hrkt : '';
+  const en = c.en || '—';
+  const zh = c.zh || '—';
+
+  const spriteHtml = c.cat === 'pokemon'
+    ? `<img class="card-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${c.id}.png" alt="${en}" onerror="this.style.display='none'">`
+    : '';
+
+  area.innerHTML = `
+    <div class="card">
+      <div class="card-cat-bar" data-cat="${c.cat}"></div>
+      <div class="card-inner">
+        <div class="card-cat-label">${CAT_EMOJI[c.cat] || ''} ${CAT_LABEL[c.cat] || c.cat}</div>
+        ${spriteHtml}
+        <div class="card-ja">${escHtml(ja)}</div>
+        ${reading ? `<div class="card-reading">${escHtml(reading)}</div>` : ''}
+
+        <div class="card-reveal" id="cardReveal">
+          <div class="card-en">${escHtml(en)}</div>
+          <div class="card-zh">${escHtml(zh)}</div>
+          <div class="card-id">#${String(c.id).padStart(4, '0')}</div>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="learn-btn" onclick="revealCard()">👁️ 顯示答案</button>
+        <button class="learn-btn primary" onclick="newCard()">🔄 下一個</button>
+        <button class="learn-btn" onclick="openDetail('${c.cat}',${c.id})">📖 詳細</button>
+      </div>
+    </div>
+  `;
+}
+
+function revealCard() {
+  const el = document.getElementById('cardReveal');
+  if (el) el.classList.add('show');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PAGE SWITCH
+   ═══════════════════════════════════════════════════════════ */
+
+function switchPage(page) {
+  document.querySelectorAll('.nav-btn').forEach(el => {
+    el.classList.toggle('active', el.dataset.page === page);
+  });
+  document.getElementById('searchPage').classList.toggle('hidden', page !== 'search');
+  document.getElementById('learnPage').classList.toggle('active', page === 'learn');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UTILS
+   ═══════════════════════════════════════════════════════════ */
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════════ */
+
+document.getElementById('searchInput').addEventListener('input', debounce(doSearch, 200));
+
+function debounce(fn, ms) {
+  let t;
+  return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+}
+
+// Keyboard shortcut
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if (e.key === '/' && !e.ctrlKey && document.activeElement.tagName !== 'INPUT') {
+    e.preventDefault();
+    switchPage('search');
+    document.getElementById('searchInput').focus();
+  }
+});
+
+loadData();
+</script>
+</body>
+</html>
