@@ -802,16 +802,20 @@ function doSearch() {
   const cats = currentCat === 'all' ? Object.keys(INDEX) : [currentCat];
   const results = [];
 
+  // Build search variants: original + kana-converted versions
+  const queries = [query];
+  if (hasKana(query)) {
+    queries.push(hiraToKata(query));
+    queries.push(kataToHira(query));
+  }
+
   for (const cat of cats) {
     const entries = INDEX[cat] || {};
     for (const [id, entry] of Object.entries(entries)) {
       if (results.length >= MAX_RESULTS) break;
-      if (!query) {
-        // show nothing if no query (too many results)
-        continue;
-      }
+      if (!query) continue;
       const fields = [entry.en || '', entry.ja || '', entry.ja_hrkt || '', entry.zh || ''];
-      if (fields.some(f => f.toLowerCase().includes(query))) {
+      if (queries.some(q => fields.some(f => f.toLowerCase().includes(q)))) {
         results.push({ cat, id: parseInt(id), ...entry });
       }
     }
@@ -1146,6 +1150,21 @@ function escHtml(s) {
   const d = document.createElement('div');
   d.textContent = s;
   return d.innerHTML;
+}
+
+// ひらがな → カタカナ（U+3041~U+3096 → U+30A1~U+30F6, offset +0x60）
+function hiraToKata(s) {
+  return s.replace(/[\u3041-\u3096]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60));
+}
+
+// カタカナ → ひらがな
+function kataToHira(s) {
+  return s.replace(/[\u30A1-\u30F6]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60));
+}
+
+// Check if string contains any Japanese kana
+function hasKana(s) {
+  return /[\u3041-\u3096\u30A1-\u30F6]/.test(s);
 }
 
 /* ═══════════════════════════════════════════════════════════
