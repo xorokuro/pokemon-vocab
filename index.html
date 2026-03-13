@@ -447,6 +447,81 @@ body::before {
   font-weight: 600;
 }
 
+/* ═══ WIKI LINKS ═══ */
+.wiki-links {
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.wiki-links-title {
+  font-size: 0.75rem;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.wiki-links-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+.wiki-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.wiki-link:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.wiki-link-icon {
+  font-size: 0.9rem;
+}
+
+/* ═══ ETYMOLOGY SECTION ═══ */
+.etymology-section {
+  margin-top: 1rem;
+  padding: 0.8rem 1rem;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.etymology-title {
+  font-size: 0.78rem;
+  color: var(--accent2);
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.etymology-row {
+  font-size: 0.82rem;
+  color: var(--text2);
+  line-height: 1.5;
+  margin-bottom: 0.25rem;
+}
+
+.etymology-row strong {
+  color: var(--text);
+}
+
 .detail-loading {
   text-align: center;
   padding: 2rem;
@@ -970,6 +1045,8 @@ async function renderPokemonDetail(species, local, id) {
       #${String(id).padStart(4,'0')}
     </div>
     ${typeHtml ? `<div class="detail-tags">${typeHtml}</div>` : ''}
+    ${getEtymologyHtml('pokemon', id)}
+    ${getWikiLinksHtml('pokemon', en, jp.ja, zh)}
   `;
 }
 
@@ -1000,6 +1077,8 @@ function renderMoveDetail(data, local) {
       ${dc ? `<span class="detail-tag">${dcInfo.emoji || ''} ${dcInfo.zh || dc}</span>` : ''}
     </div>
     ${stats.length ? `<div style="text-align:center;margin-top:0.8rem;color:var(--text2);font-size:0.9rem">${stats.join(' ｜ ')}</div>` : ''}
+    ${getEtymologyHtml('move', data.id)}
+    ${getWikiLinksHtml('move', en, jp.ja, zh)}
   `;
 }
 
@@ -1038,6 +1117,8 @@ function renderNatureDetail(data, local) {
       <div class="detail-zh">${escHtml(zh)}</div>
     </div>
     ${effectHtml}
+    ${getEtymologyHtml('nature', data.id)}
+    ${getWikiLinksHtml('nature', en, jp.ja, zh)}
   `;
 }
 
@@ -1054,17 +1135,24 @@ function renderGenericDetail(data, local, cat) {
       <div class="detail-en">${escHtml(en)}</div>
       <div class="detail-zh">${escHtml(zh)}</div>
     </div>
+    ${getEtymologyHtml(cat, data.id)}
+    ${getWikiLinksHtml(cat, en, jp.ja, zh)}
   `;
 }
 
 function renderLocalDetail(local, cat, id) {
+  const ja = local.ja || local.ja_hrkt || '—';
+  const en = local.en || '—';
+  const zh = local.zh || '—';
   return `
     <div class="detail-names">
-      <div class="detail-ja">${escHtml(local.ja || local.ja_hrkt || '—')}</div>
+      <div class="detail-ja">${escHtml(ja)}</div>
       ${(local.ja_hrkt && local.ja && local.ja !== local.ja_hrkt) ? `<div class="detail-ja-reading">${escHtml(local.ja_hrkt)}</div>` : ''}
-      <div class="detail-en">${escHtml(local.en || '—')}</div>
-      <div class="detail-zh">${escHtml(local.zh || '—')}</div>
+      <div class="detail-en">${escHtml(en)}</div>
+      <div class="detail-zh">${escHtml(zh)}</div>
     </div>
+    ${getEtymologyHtml(cat, id)}
+    ${getWikiLinksHtml(cat, en, ja, zh)}
     <div style="text-align:center;margin-top:1rem;color:var(--text3);font-size:0.8rem">
       ⚠️ 無法連線 PokeAPI，僅顯示本地資料
     </div>
@@ -1284,6 +1372,85 @@ function romajiToKata(s) {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   WIKI LINKS & ETYMOLOGY
+   ═══════════════════════════════════════════════════════════ */
+
+let ETYMOLOGY = null; // Will be loaded if etymology.json exists
+
+async function loadEtymology() {
+  try {
+    const resp = await fetch('etymology.json');
+    if (resp.ok) {
+      ETYMOLOGY = await resp.json();
+      console.log('✅ etymology.json loaded');
+    }
+  } catch(e) {
+    // etymology.json not available yet — that's fine
+  }
+}
+
+const BULBA_SUFFIX = {
+  pokemon: '_(Pokémon)', move: '_(move)', item: '', ability: '_(Ability)', nature: ''
+};
+
+function getWikiLinksHtml(cat, en, ja, zh) {
+  const links = [];
+
+  // Bulbapedia (English)
+  if (en && en !== '—') {
+    let bulbaPath;
+    if (cat === 'nature') {
+      bulbaPath = 'Nature';
+    } else {
+      bulbaPath = en.replace(/ /g, '_') + (BULBA_SUFFIX[cat] || '');
+    }
+    links.push(`<a class="wiki-link" href="https://bulbapedia.bulbagarden.net/wiki/${encodeURIComponent(bulbaPath)}" target="_blank" rel="noopener">
+      <span class="wiki-link-icon">🌱</span> Bulbapedia
+    </a>`);
+  }
+
+  // ポケモンWiki (Japanese)
+  if (ja && ja !== '—') {
+    links.push(`<a class="wiki-link" href="https://wiki.xn--rckteqa2e.com/wiki/${encodeURIComponent(ja)}" target="_blank" rel="noopener">
+      <span class="wiki-link-icon">🇯🇵</span> ポケモンWiki
+    </a>`);
+  }
+
+  // 52Poké 神奇宝贝百科 (Chinese)
+  if (zh && zh !== '—') {
+    links.push(`<a class="wiki-link" href="https://wiki.52poke.com/wiki/${encodeURIComponent(zh)}" target="_blank" rel="noopener">
+      <span class="wiki-link-icon">🇹🇼</span> 神奇寶貝百科
+    </a>`);
+  }
+
+  if (links.length === 0) return '';
+
+  return `
+    <div class="wiki-links">
+      <div class="wiki-links-title">📖 名稱由來 · Etymology</div>
+      <div class="wiki-links-row">${links.join('')}</div>
+    </div>`;
+}
+
+function getEtymologyHtml(cat, id) {
+  if (!ETYMOLOGY) return '';
+  const entry = (ETYMOLOGY[cat] || {})[String(id)];
+  if (!entry) return '';
+
+  const rows = [];
+  if (entry.ja) rows.push(`<div class="etymology-row"><strong>🇯🇵 日：</strong>${escHtml(entry.ja)}</div>`);
+  if (entry.en) rows.push(`<div class="etymology-row"><strong>🇬🇧 英：</strong>${escHtml(entry.en)}</div>`);
+  if (entry.zh) rows.push(`<div class="etymology-row"><strong>🇹🇼 中：</strong>${escHtml(entry.zh)}</div>`);
+
+  if (rows.length === 0) return '';
+  return `
+    <div class="etymology-section">
+      <div class="etymology-title">🔤 名稱由來 Name Origin</div>
+      ${rows.join('')}
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════
    INIT
    ═══════════════════════════════════════════════════════════ */
 
@@ -1305,6 +1472,7 @@ document.addEventListener('keydown', e => {
 });
 
 loadData();
+loadEtymology();
 </script>
 </body>
 </html>
