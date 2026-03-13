@@ -802,11 +802,17 @@ function doSearch() {
   const cats = currentCat === 'all' ? Object.keys(INDEX) : [currentCat];
   const results = [];
 
-  // Build search variants: original + kana-converted versions
+  // Build search variants: original + kana-converted versions + romaji
   const queries = [query];
   if (hasKana(query)) {
     queries.push(hiraToKata(query));
     queries.push(kataToHira(query));
+  }
+  if (isRomaji(query) && query.length >= 2) {
+    const kata = romajiToKata(query);
+    const hira = kataToHira(kata);
+    if (kata !== query) queries.push(kata);
+    if (hira !== query) queries.push(hira);
   }
 
   for (const cat of cats) {
@@ -1165,6 +1171,116 @@ function kataToHira(s) {
 // Check if string contains any Japanese kana
 function hasKana(s) {
   return /[\u3041-\u3096\u30A1-\u30F6]/.test(s);
+}
+
+// Check if string looks like romaji (only ascii letters)
+function isRomaji(s) {
+  return /^[a-z]+$/i.test(s);
+}
+
+// Romaji → カタカナ converter (Hepburn + common variants)
+function romajiToKata(s) {
+  s = s.toLowerCase();
+  // Sorted longest-first so multi-char matches take priority
+  const MAP = [
+    // 4-char
+    ['xtsu','ッ'],['ltsu','ッ'],
+    // 3-char: combo sounds
+    ['sha','シャ'],['shi','シ'],['shu','シュ'],['sho','ショ'],
+    ['cha','チャ'],['chi','チ'],['chu','チュ'],['cho','チョ'],
+    ['tsu','ツ'],['tya','チャ'],['tyi','チィ'],['tyu','チュ'],['tyo','チョ'],
+    ['cya','チャ'],['cyi','チィ'],['cyu','チュ'],['cyo','チョ'],
+    ['sya','シャ'],['syi','シィ'],['syu','シュ'],['syo','ショ'],
+    ['jya','ジャ'],['jyi','ジィ'],['jyu','ジュ'],['jyo','ジョ'],
+    ['nya','ニャ'],['nyi','ニィ'],['nyu','ニュ'],['nyo','ニョ'],
+    ['hya','ヒャ'],['hyi','ヒィ'],['hyu','ヒュ'],['hyo','ヒョ'],
+    ['mya','ミャ'],['myi','ミィ'],['myu','ミュ'],['myo','ミョ'],
+    ['rya','リャ'],['ryi','リィ'],['ryu','リュ'],['ryo','リョ'],
+    ['bya','ビャ'],['byi','ビィ'],['byu','ビュ'],['byo','ビョ'],
+    ['pya','ピャ'],['pyi','ピィ'],['pyu','ピュ'],['pyo','ピョ'],
+    ['gya','ギャ'],['gyi','ギィ'],['gyu','ギュ'],['gyo','ギョ'],
+    ['dya','ヂャ'],['dyi','ヂィ'],['dyu','ヂュ'],['dyo','ヂョ'],
+    ['kya','キャ'],['kyi','キィ'],['kyu','キュ'],['kyo','キョ'],
+    // 2-char
+    ['ka','カ'],['ki','キ'],['ku','ク'],['ke','ケ'],['ko','コ'],
+    ['sa','サ'],['si','シ'],['su','ス'],['se','セ'],['so','ソ'],
+    ['ta','タ'],['ti','チ'],['tu','ツ'],['te','テ'],['to','ト'],
+    ['na','ナ'],['ni','ニ'],['nu','ヌ'],['ne','ネ'],['no','ノ'],
+    ['ha','ハ'],['hi','ヒ'],['hu','フ'],['he','ヘ'],['ho','ホ'],
+    ['fu','フ'],
+    ['ma','マ'],['mi','ミ'],['mu','ム'],['me','メ'],['mo','モ'],
+    ['ya','ヤ'],['yu','ユ'],['yo','ヨ'],
+    ['ra','ラ'],['ri','リ'],['ru','ル'],['re','レ'],['ro','ロ'],
+    ['la','ラ'],['li','リ'],['lu','ル'],['le','レ'],['lo','ロ'],
+    ['wa','ワ'],['wi','ヰ'],['we','ヱ'],['wo','ヲ'],
+    ['ga','ガ'],['gi','ギ'],['gu','グ'],['ge','ゲ'],['go','ゴ'],
+    ['za','ザ'],['zi','ジ'],['zu','ズ'],['ze','ゼ'],['zo','ゾ'],
+    ['da','ダ'],['di','ヂ'],['du','ヅ'],['de','デ'],['do','ド'],
+    ['ba','バ'],['bi','ビ'],['bu','ブ'],['be','ベ'],['bo','ボ'],
+    ['pa','パ'],['pi','ピ'],['pu','プ'],['pe','ペ'],['po','ポ'],
+    ['ja','ジャ'],['ji','ジ'],['ju','ジュ'],['je','ジェ'],['jo','ジョ'],
+    ['va','ヴァ'],['vi','ヴィ'],['vu','ヴ'],['ve','ヴェ'],['vo','ヴォ'],
+    ['fa','ファ'],['fi','フィ'],['fe','フェ'],['fo','フォ'],
+    // 1-char vowels
+    ['a','ア'],['i','イ'],['u','ウ'],['e','エ'],['o','オ'],
+    ['n','ン'],
+  ];
+
+  let result = '';
+  let i = 0;
+  while (i < s.length) {
+    // Long vowels: aa→アー, ii→イー, uu→ウー, ee→エー, oo→オー
+    if (i > 0 && i < s.length && 'aiueo'.includes(s[i]) && s[i] === s[i-1] 
+        && result.length > 0 && 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポ'.includes(result[result.length-1])) {
+      // Previous char was already the vowel kana, replace with ー
+      result += 'ー';
+      i++;
+      continue;
+    }
+    // Double consonant → ッ (e.g. kk, pp, tt, cc, ss)
+    if (i + 1 < s.length && s[i] === s[i+1] && 'bcdfghjklmpqrstvwxyz'.includes(s[i])) {
+      // Special case: 'nn' → ン (not ッ+n)
+      if (s[i] === 'n') {
+        result += 'ン';
+        i++;
+        continue;
+      }
+      // Special case: 'cch' → ッチ (handle tch too)
+      if (s[i] === 't' && i + 2 < s.length && s[i+2] === 'c') {
+        result += 'ッ';
+        i++;
+        continue;
+      }
+      result += 'ッ';
+      i++;
+      continue;
+    }
+    // 'tch' → ッチ
+    if (s.substr(i, 3) === 'tch') {
+      result += 'ッ';
+      i++;
+      continue;
+    }
+    // Try matching longest sequences first
+    let matched = false;
+    for (const [rom, kata] of MAP) {
+      if (s.substr(i, rom.length) === rom) {
+        // Special: 'n' before vowel or 'y' should NOT become ン
+        if (rom === 'n' && i + 1 < s.length && 'aiueoy'.includes(s[i+1])) {
+          continue;
+        }
+        result += kata;
+        i += rom.length;
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) {
+      result += s[i];
+      i++;
+    }
+  }
+  return result;
 }
 
 /* ═══════════════════════════════════════════════════════════
